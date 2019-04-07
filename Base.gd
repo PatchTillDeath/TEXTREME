@@ -42,8 +42,6 @@ onready var LoadDialog = $UIBase/LoadDialog
 onready var SaveDialog = $UIBase/SaveDialog
 onready var StartTextPosition = $StartTextPosition
 
-onready var RythmControl = $UIBase/RhythmControl
-
 #runs on boot up, basic setup
 func _ready():
 	TextEditWindow.grab_focus()
@@ -234,12 +232,6 @@ func _input(event):
 			typejerk("enter")
 		else:
 			queue_check = true
-		
-		if $UIBase/RhythmControl.isactive:
-			if $UIBase/RhythmControl.checktiming():
-				spawnhitconfirm()
-			else:
-				spawnhitfail()
 
 func analyze_input(input):
 	if input != "":
@@ -328,20 +320,6 @@ func spawnletter(position, text):
 	position.x += -charsize.x*0.5
 	cross.letter = text
 	cross.global_position = position + StartTextPosition.global_position
-
-func spawnhitconfirm():
-	var confirm = preload("res://Effects\\hit confirm.tscn").instance()
-	StartTextPosition.add_child(confirm)
-	confirm.global_position = RythmControl.get_node("Beatslider/center").global_position
-	confirm.scale = RythmControl.rect_scale
-	confirm.modulate = RythmControl.modulate
-
-func spawnhitfail():
-	var fail = preload("res://Effects\\fail.tscn").instance()
-	StartTextPosition.add_child(fail)
-	fail.global_position = RythmControl.get_node("Beatslider/center").global_position
-	fail.scale = RythmControl.rect_scale
-	fail.modulate = RythmControl.modulate
 
 func what_added(linebefore):
 	var cursorpos = Vector2(TextEditWindow.cursor_get_column()-TextEditWindow.get_child(0).value/charsize.x,TextEditWindow.cursor_get_line()-TextEditWindow.get_child(1).value)
