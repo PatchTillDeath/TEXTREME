@@ -96,12 +96,20 @@ func loadsyntax():
 	
 	var infoarray = info.get_csv_line()
 	
-	while infoarray.size() != 0:
+	# Clearly what he intended, also makes sense and fixes the debugger error!
+	while not info.eof_reached():
 		
 		if infoarray.size() >= 2:
 			TextEditWindow.add_keyword_color(infoarray[0], ColorN(infoarray[1],1))
-		
 		infoarray = info.get_csv_line()
+	
+	# CPP comment support.
+	# Color info: https://docs.godotengine.org/uk/latest/classes/class_color.html#class-color
+	TextEditWindow.add_color_region("/*", "*/", Color( 0.54, 0.17, 0.89, 1 ), false)
+	TextEditWindow.add_color_region("//", "",   Color( 0.54, 0.17, 0.89, 1 ), true)
+	
+	# Clean up file resource, you should close this.
+	info.close()
 
 
 func _on_Load_pressed():
@@ -199,7 +207,7 @@ func typejerk(type):
 						getColor(6), flashtimeenter, $Ding, -5, "spawnflash")
 		"delete":
 			process_key(rand_range(-PI*0.25,PI*0.25)+PI/2, keytimedelete, keyoffdelete, 
-						getColor(1), flashtimedelete, $Keystroke, -8, "nofunc", charsize*Vector2(1,0))
+						getRandomColor(), flashtimedelete, $Keystroke, -8, "nofunc", charsize*Vector2(1,0))
 		"repeat":
 			process_key(rand_range(0,TAU), 0.05, 1, 
 						getRandomColor(), 0.05, $Keystroke, -15, "spawnsparks")
