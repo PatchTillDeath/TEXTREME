@@ -121,15 +121,18 @@ func _on_Load_pressed():
 	LoadDialog.get_node("LineEdit").grab_focus()
 
 #saves given text to a given file
-func save(text,fname):
-	savename = fname
+func save(text, fname):
 	var file = File.new()
 	
-	var baseFolder = mkPath(OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS), "TEXTREME")
+	
+	var baseFolder = mkPath(OS.get_executable_path().get_base_dir(), "saves")
+	var os = OS.get_name()
+	if "Windows" != os:
+		baseFolder = mkPath(OS.get_user_data_dir(), "saves")
 	
 	Directory.new().make_dir(baseFolder)
 	
-	file.open(mkPath(baseFolder, fname + ".txt"), file.WRITE)
+	file.open(mkPath(baseFolder, fname), file.WRITE)
 	
 	if !file.is_open():
 		printerr("Failed to save the file!")
@@ -141,9 +144,12 @@ func save(text,fname):
 func lload(fname):
 	var file = File.new()
 	
-	var baseFolder = OS.get_system_dir(OS.SYSTEM_DIR_DOCUMENTS) + "/TEXTREME"
+	var baseFolder = mkPath(OS.get_executable_path().get_base_dir(), "saves")
+	var os = OS.get_name()
+	if "Windows" != os:
+		baseFolder = mkPath(OS.get_user_data_dir(), "saves")
 	
-	file.open(mkPath(baseFolder, fname + ".txt"), file.READ)
+	file.open(mkPath(baseFolder, fname), file.READ)
 	var content = file.get_as_text()
 	
 	if !file.is_open():
